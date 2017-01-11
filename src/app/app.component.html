@@ -1,3 +1,21 @@
-<h1>
-  {{title}}
-</h1>
+<md-sidenav-layout fullscreen>
+  <md-sidenav #start opened="false" mode="side">
+  <!--  <cs-sidenav-page></cs-sidenav-page>-->
+  </md-sidenav>
+
+  <md-toolbar color="primary" class="flex-container">
+    <button  md-button class="md-icon-button" (click)="start.toggle()" aria-label="Settings">
+      <md-icon md-font-set="material-icons">menu</md-icon>
+    </button>
+    <h2 class="flex-grow-header">Cyberdyme Ng Demo</h2>
+    <span flex></span>
+    <button md-button class="md-icon-button" aria-label="More">
+      <md-icon md-font-set="material-icons">more_vert</md-icon>
+    </button>
+  </md-toolbar>
+
+
+  <div class="sidenav-content">
+<!--    <cs-main-page></cs-main-page>-->
+  </div>
+</md-sidenav-layout>
