@@ -1,6 +1,20 @@
 <md-sidenav-layout fullscreen>
   <md-sidenav #start opened="false" mode="side">
-  <!--  <cs-sidenav-page></cs-sidenav-page>-->
+    <!--Iterate all menu items-->
+
+<!--
+    <div style="margin: 8px" *ngFor="let menu of menuService.GetMenuItems()">
+      <a [routerLink]="[menu.path]" class="mdl-badge">{{menu.description}}</a>
+    </div>
+    -->
+
+    <!-- <a routerLink="/crisis-center" routerLinkActive="active">Crisis Center</a>-->
+    <md-list-item *ngFor="let menu of menuService.GetMenuItems()">
+      <button ngClass="menuButtonLink"  md-button color="accent" [routerLink]="[menu?.path]">
+        <md-icon ngClass="menuIcon" md-font-set="material-icons">{{menu?.icon}}</md-icon>
+        {{menu?.description}}
+      </button>
+    </md-list-item>
   </md-sidenav>
 
   <md-toolbar color="primary" class="flex-container">
@@ -16,6 +30,6 @@
 
 
   <div class="sidenav-content">
-<!--    <cs-main-page></cs-main-page>-->
+    <router-outlet></router-outlet>
   </div>
 </md-sidenav-layout>
