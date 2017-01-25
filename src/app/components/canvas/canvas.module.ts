@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {CanvasComponent} from "./canvas.component";
 import {routing} from "./canvas.route";
+import { PaintDirective } from './paint.directive';
 
 @NgModule({
   imports: [
@@ -11,6 +12,6 @@ import {routing} from "./canvas.route";
   exports:[
     CanvasComponent
   ],
-  declarations: [CanvasComponent]
+  declarations: [CanvasComponent, PaintDirective]
 })
 export class CanvasModule { }
