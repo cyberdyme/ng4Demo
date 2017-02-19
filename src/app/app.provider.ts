@@ -1,4 +1,4 @@
-import {routing, MenuProviderService} from "./app.route";
+import {routing, MenuProviderService} from './app.route';
 /**
  * Created by girishthanki on 15/01/2017.
  */

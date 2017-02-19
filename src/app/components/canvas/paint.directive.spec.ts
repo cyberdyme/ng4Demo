@@ -5,7 +5,7 @@ import { PaintDirective } from './paint.directive';
 
 describe('PaintDirective', () => {
   it('should create an instance', () => {
-    let directive = new PaintDirective();
+    const directive = new PaintDirective();
     expect(directive).toBeTruthy();
   });
 });

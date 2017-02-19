@@ -2,11 +2,11 @@
 
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import {HelloWorldComponent} from "./components/hello-world.component";
-import {AboutComponent} from "./components/about.component";
-import {TrackDirective} from "./directives/track.directive";
-import {routing} from "./app.route";
-import {CanvasModule} from "./components/canvas/canvas.module";
+import {HelloWorldComponent} from './components/hello-world.component';
+import {AboutComponent} from './components/about.component';
+import {TrackDirective} from './directives/track.directive';
+import {routing} from './app.route';
+import {CanvasModule} from './components/canvas/canvas.module';
 import {MaterialModule} from '@angular/material';
 
 describe('AppComponent', () => {

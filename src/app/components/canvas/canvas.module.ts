@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {CanvasComponent} from "./canvas.component";
-import {routing} from "./canvas.route";
+import {CanvasComponent} from './canvas.component';
+import {routing} from './canvas.route';
 import { PaintDirective } from './paint.directive';
 
 @NgModule({
@@ -9,7 +9,7 @@ import { PaintDirective } from './paint.directive';
     CommonModule,
     routing
   ],
-  exports:[
+  exports: [
     CanvasComponent
   ],
   declarations: [CanvasComponent, PaintDirective]

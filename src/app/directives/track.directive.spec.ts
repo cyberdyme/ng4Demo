@@ -5,7 +5,7 @@ import { TrackDirective } from './track.directive';
 
 describe('TrackDirective', () => {
   it('should create an instance', () => {
-    let directive = new TrackDirective();
+    const directive = new TrackDirective();
     expect(directive).toBeTruthy();
   });
 });

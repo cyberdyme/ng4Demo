@@ -4,7 +4,7 @@
 
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CanvasComponent } from "./canvas.component";
+import { CanvasComponent } from './canvas.component';
 
 const routes: Routes = [
   { path: 'Canvas', component: CanvasComponent }

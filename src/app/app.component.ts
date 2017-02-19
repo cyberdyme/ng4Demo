@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {MenuProviderService} from "./app.route";
+import {MenuProviderService} from './app.route';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +9,6 @@ import {MenuProviderService} from "./app.route";
 export class AppComponent {
   title = 'app works!';
 
-  constructor(public menuService : MenuProviderService){
+  constructor(public menuService: MenuProviderService) {
   }
 }
