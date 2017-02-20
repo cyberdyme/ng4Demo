@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild, ElementRef} from '@angular/core';
 import {MenuProviderService} from './app.route';
+import {WindowingService} from "./services/windowing-service";
 
 @Component({
   selector: 'app-root',
@@ -7,8 +8,6 @@ import {MenuProviderService} from './app.route';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app works!';
-
   constructor(public menuService: MenuProviderService) {
   }
 }

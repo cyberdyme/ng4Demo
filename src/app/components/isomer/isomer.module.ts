@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {IsomerComponent} from "./isomer.component";
+import {IsomerComponent} from './isomer.component';
+import {WindowingServiceModule} from "../../services/windowing-service.module";
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    WindowingServiceModule.forRoot()
   ],
   exports: [
     IsomerComponent

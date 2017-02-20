@@ -42,5 +42,10 @@ export class CanvasComponent implements AfterViewInit {
     // set line color
     context.strokeStyle = '#ff0000';
     context.stroke();
+
+    const width=context.canvas.width;
+    const height=context.canvas.height;
+    console.log('Canvas::Canvas width=' + width);
+    console.log('Canvas::Canvas height=' + height);
   }
 }

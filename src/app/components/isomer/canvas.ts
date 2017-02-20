@@ -7,11 +7,6 @@ export class Canvas {
 
   constructor(private elem: HTMLCanvasElement) {
     this.ctx = this.elem.getContext('2d');
-    this.width = elem.width;
-    this.height = elem.height;
-
-    console.log('Iso::Canvas width='+this.width);
-    console.log('Iso::Canvas height='+this.height);
   }
 
   clear() {
@@ -24,7 +19,7 @@ export class Canvas {
 
     for (let i = 1; i < points.length; i++) {
       this.ctx.lineTo(points[i].x, points[i].y);
-      console.log('Iso::points ='+i+' x='+points[i].x+' y='+points[i].y);
+      console.log('Iso::points =' + i + ' x=' + points[i].x + ' y=' + points[i].y);
     }
 
     this.ctx.closePath();
@@ -38,4 +33,72 @@ export class Canvas {
     this.ctx.fill();
     this.ctx.restore();
   };
+
+  drawGrid() {
+    var gridOptions = {
+      minorLines: {
+        separation: 5,
+        color: '#00FF00'
+      },
+      majorLines: {
+        separation: 30,
+        color: '#FF0000'
+      }
+    };
+
+    //this.width = this.elem.width;
+    //this.height = this.elem.height;
+
+    this.drawGridLines(gridOptions.minorLines);
+    this.drawGridLines(gridOptions.majorLines);
+
+  }
+
+  private drawGridLines(lineOptions) {
+    this.width=this.ctx.canvas.width;
+    this.height=this.ctx.canvas.height;
+    console.log('Iso::Canvas width=' + this.width);
+    console.log('Iso::Canvas height=' + this.height);
+
+
+    var iWidth = this.width;
+    var iHeight = this.height;
+
+
+
+    this.ctx.strokeStyle = lineOptions.color;
+    //this.ctx.strok = 1;
+
+    this.ctx.beginPath();
+
+    var iCount = null;
+    var i = null;
+    var x = null;
+    var y = null;
+
+    iCount = Math.floor(iWidth / lineOptions.separation);
+
+    for (i = 1; i <= iCount; i++) {
+      x = (i * lineOptions.separation);
+      this.ctx.moveTo(x, 0);
+      this.ctx.lineTo(x, iHeight);
+      this.ctx.lineWidth = 1;
+      this.ctx.stroke();
+    }
+
+
+    iCount = Math.floor(iHeight / lineOptions.separation);
+
+    for (i = 1; i <= iCount; i++) {
+      y = (i * lineOptions.separation);
+      this.ctx.moveTo(0, y);
+      this.ctx.lineTo(iWidth, y);
+      this.ctx.lineWidth = 1;
+      this.ctx.stroke();
+    }
+
+    this.ctx.closePath();
+
+    return;
+  }
 }

@@ -5,6 +5,7 @@ import {Path} from './path';
 import {Point} from './point';
 import {Vector} from './vector';
 import {Colour} from './colour';
+import {WindowingService} from "../../services/windowing-service";
 
 @Component({
   selector: 'app-isomer',
@@ -12,6 +13,7 @@ import {Colour} from './colour';
   styleUrls: ['./isomer.component.css']
 })
 export class IsomerComponent implements AfterViewInit {
+
   private canvas: Canvas;
   private angle: number;
   private scale: number;
@@ -25,11 +27,22 @@ export class IsomerComponent implements AfterViewInit {
 
   @ViewChild('myCanvasInstance') canvasInstance: ElementRef;
 
-  constructor() {
+  constructor(private windowingService : WindowingService) {
   }
 
   ngAfterViewInit()
   {
+    const canvasElement = <HTMLCanvasElement>this.canvasInstance.nativeElement;
+
+    // Make it visually fill the positioned parent
+    canvasElement.style.width = '100%';
+    canvasElement.style.height = '100%';
+
+    this.canvas = new Canvas(canvasElement);
+    this.canvas.drawGrid();
+    return;
+
+/*
     const options = {
       originX: undefined,
       originY: undefined,
@@ -49,18 +62,9 @@ export class IsomerComponent implements AfterViewInit {
     this.originX = options.originX || canvasElement.width / 2;
     this.originY = options.originY || canvasElement.height * 0.9;
 
-    /**
-     * Light source as defined as the angle from
-     * the object to the source.
-     *
-     * We'll define somewhat arbitrarily for now.
-     */
     this.lightPosition = options.lightPosition || new Vector(2, -1, 3);
     this.lightAngle = this.lightPosition.normalize();
 
-    /**
-     * The maximum color difference from shading
-     */
     this.colorDifference = 0.20;
     this.lightColor = options.lightColor || new Colour(255, 255, 255);
 
@@ -72,6 +76,7 @@ export class IsomerComponent implements AfterViewInit {
     //const shapeObject: Shape = Shape.Pyramid(new Point(0, 2, 1));
     //this.addShape(shapeObject, red);
     //this.add(Shape.Prism(Point(2, 0, 1)), blue);
+    */
   }
 
   /**

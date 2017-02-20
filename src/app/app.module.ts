@@ -11,15 +11,17 @@ import {routing} from './app.route';
 import { AboutComponent } from './components/about.component';
 import {CanvasModule} from './components/canvas/canvas.module';
 import { TrackDirective } from './directives/track.directive';
-import { IsomerComponent } from './components/isomer/isomer.component';
-import {IsomerModule} from "./components/isomer/isomer.module";
+import {IsomerModule} from './components/isomer/isomer.module';
+import {WindowingServiceModule} from './services/windowing-service.module';
+import {ResizeTrackingDirective} from "./directives/resize-tracking.directive";
 
 @NgModule({
   declarations: [
     AppComponent,
     HelloWorldComponent,
     AboutComponent,
-    TrackDirective
+    TrackDirective,
+    ResizeTrackingDirective
   ],
   imports: [
     BrowserModule,
@@ -28,7 +30,8 @@ import {IsomerModule} from "./components/isomer/isomer.module";
     MaterialModule.forRoot(),
     routing,
     CanvasModule,
-    IsomerModule
+    IsomerModule,
+    WindowingServiceModule.forRoot()
   ],
   exports: [
     HelloWorldComponent

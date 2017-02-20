@@ -38,3 +38,10 @@ testem.log
 #System Files
 .DS_Store
 Thumbs.db
+
+typings
+app/**/*.js
+app/**/*.map
+node_modules
+jspm_packages
+bower_components
