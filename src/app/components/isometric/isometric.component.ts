@@ -1,5 +1,20 @@
 import {Component, OnInit, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
 import {WindowingService, ResizeValues} from "../../services/windowing-service";
+import {forEach} from "@angular/router/src/utils/collection";
+
+enum ActionType
+{
+  DrawLine
+}
+
+export interface IDrawOperation
+{
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number
+}
+
 
 @Component({
   selector: 'cs-isometric',
@@ -15,6 +30,8 @@ export class IsometricComponent implements AfterViewInit {
   private width: number;
   private height: number;
   private isInitialised: boolean;
+
+  private drawList : Array<IDrawOperation>;
 
   constructor(private  windowingService: WindowingService) {
     this.width = 1200;
@@ -35,7 +52,7 @@ export class IsometricComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     const canvasControl = this.canvas.nativeElement as HTMLCanvasElement;
     this.ctx = canvasControl.getContext('2d');
-    this.drawGrid()
+    this.drawGrid();
     this.isInitialised = true;
   }
 
@@ -58,33 +75,52 @@ export class IsometricComponent implements AfterViewInit {
   }
 
   private drawGridLines(lineOptions) {
-    var iWidth = this.width;
-    var iHeight = this.height;
-    this.ctx.strokeStyle = lineOptions.color;
+    const iWidth = this.width;
+    const iHeight = this.height;
 
-    this.ctx.beginPath();
-    this.ctx.lineWidth = 1;
+    const halfWidth = iWidth >> 1;
+    const halfHeight = iHeight >> 1;
 
+    console.log(`iWidth = ${iWidth}`);
+    console.log(`halfWidth = ${halfWidth}`);
+    console.log(`iHeight = ${iHeight}`);
+    console.log(`halfHeight = ${halfHeight}`);
+
+
+    this.drawList=new Array<IDrawOperation>();
+
+    /*
     let x = 0;
     while (x < iWidth) {
       x+=lineOptions.separation;
-      this.drawLine(this.ctx, x,0,x,iHeight);
+      this.drawList.push({x1:x,y1:0,x2:x,y2:iHeight});
     }
 
     let y = 0;
     while (y < iHeight) {
       y+=lineOptions.separation;
-      this.drawLine(this.ctx, 0,y,iWidth,y);
+      this.drawList.push({x1:0,y1:y,x2:iWidth,y2:y});
     }
+    */
 
+    //this.drawList.push({x1:0,y1:8,x2:halfWidth,y2:iHeight - 8});
+    //this.drawList.push({x1:8,y1:halfHeight,x2:iWidth - 8,y2:halfHeight});
+
+    this.drawList.push({x1:-halfWidth+8,y1:0,x2:halfWidth-8,y2:0});
+    this.drawList.push({x1:0,y1:-halfHeight+8,x2:0,y2:halfHeight-8});
+
+    this.ctx.fillStyle="black";
+    this.ctx.fillRect(0,0,iWidth, iHeight);
+
+    this.ctx.strokeStyle = lineOptions.color;
+    this.ctx.beginPath();
+    this.ctx.lineWidth = 1;
+    this.drawList.forEach(p => {
+      this.ctx.moveTo(p.x1 + halfWidth, p.y1 + halfHeight);
+      this.ctx.lineTo(p.x2 + halfWidth, p.y2 + halfHeight);
+      this.ctx.stroke();
+    });
     this.ctx.closePath();
     return;
-  }
-
-  private drawLine(context: CanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number)
-  {
-    this.ctx.moveTo(x1, y1);
-    this.ctx.lineTo(x2, y2);
-    this.ctx.stroke();
   }
 }
