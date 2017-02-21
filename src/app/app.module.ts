@@ -14,14 +14,14 @@ import { TrackDirective } from './directives/track.directive';
 import {IsomerModule} from './components/isomer/isomer.module';
 import {WindowingServiceModule} from './services/windowing-service.module';
 import {ResizeTrackingDirective} from "./directives/resize-tracking.directive";
+import {IsoMetricModule} from "./components/isometric/isometric.module";
 
 @NgModule({
   declarations: [
     AppComponent,
     HelloWorldComponent,
     AboutComponent,
-    TrackDirective,
-    ResizeTrackingDirective
+    TrackDirective
   ],
   imports: [
     BrowserModule,
@@ -31,6 +31,7 @@ import {ResizeTrackingDirective} from "./directives/resize-tracking.directive";
     routing,
     CanvasModule,
     IsomerModule,
+    IsoMetricModule,
     WindowingServiceModule.forRoot()
   ],
   exports: [

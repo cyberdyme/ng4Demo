@@ -3,6 +3,7 @@ import {ModuleWithProviders, Injectable} from '@angular/core';
 import {HelloWorldComponent} from './components/hello-world.component';
 import {AboutComponent} from './components/about.component';
 import {IsomerComponent} from "./components/isomer/isomer.component";
+import {IsometricComponent} from "./components/isometric/isometric.component";
 
 export interface ExtendedRoute extends Route {
   description?: string;
@@ -16,7 +17,7 @@ export declare type ExtendedRoutes = ExtendedRoute[];
 export const routes: ExtendedRoutes = [
   {path: 'Canvas', loadChildren: './components/canvas/canvas.module#CanvasModule', description: 'Canvas', icon: 'create', order: 1},
   {path: 'About', component: AboutComponent, description: 'About', icon: 'portrait', order: 2},
-  {path: 'Isomer', component: IsomerComponent, description: 'Isomer', icon: 'portrait', order: 3},
+  {path: 'Isomer2', component: IsometricComponent, description: 'Isomer', icon: 'portrait', order: 3},
   {path: '', component: HelloWorldComponent, description: 'HelloWord', icon: 'create', order: -1}
 ];
 
