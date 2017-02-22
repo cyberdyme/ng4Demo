@@ -1,6 +1,7 @@
-import {Component, OnInit, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
+import {Component, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
 import {WindowingService, ResizeValues} from "../../services/windowing-service";
-import {forEach} from "@angular/router/src/utils/collection";
+import {Observable, ReplaySubject} from "rxjs";
+import {Subject} from "rxjs";
 
 enum ActionType
 {
@@ -15,12 +16,145 @@ export interface IDrawOperation
   y2: number
 }
 
+interface IPoint
+{
+  x: number,
+  y: number,
+  z?: number
+}
+
+interface IShape
+{
+  getPoints(): Observable<IPoint[]>;
+}
+
+export class Rectangle implements IShape
+{
+  private pointsSubject: ReplaySubject<IPoint[]> = new ReplaySubject<IPoint[]>(1);
+
+  private halfWidth: number;
+  private halfHeight: number;
+  private left: number;
+  private right: number;
+  private top: number;
+  private bottom: number;
+
+  constructor(private x: number, private y: number, private width: number, private height: number){
+    this.regenerate();
+  }
+
+  updatePosition(x: number, y: number)
+  {
+    if(this.x !==x || this.y !==y)
+    {
+      this.regenerate();
+    }
+  }
+
+  updateDimensions(width: number, height: number)
+  {
+    if(this.width !==width || this.height !==height)
+    {
+      this.regenerate();
+    }
+  }
+
+  regenerate()
+  {
+    this.halfWidth = this.width >> 1;
+    this.halfHeight = this.height >> 1;
+    this.left = this.x - this.halfWidth;
+    this.right=this.halfWidth + this.x;
+    this.top=this.y - this.halfHeight;
+    this.bottom=this.halfHeight + this.y;
+
+    this.pointsSubject.next([
+      {x:this.left, y:this.top},
+      {x:this.right, y:this.top},
+      {x:this.right, y:this.bottom},
+      {x:this.left, y: this.bottom}])
+  }
+
+  getPoints(): Observable<IPoint[]> {
+    return this.pointsSubject.asObservable();
+  }
+}
+
+
+export class Shape
+{
+  private shapeList: Array<IShape> = new Array<IShape>();
+
+  private pointList: ReplaySubject<Observable<IPoint[]>> = new ReplaySubject<Observable<IPoint[]>>(1);
+
+  constructor(private x: number, private y: number){
+  }
+
+  addShape(shape: IShape)
+  {
+    this.shapeList.push(shape);
+    this.regenerate();
+  }
+
+  regenerate()
+  {
+    /*
+    Observable.of(...this.shapeList).map(x => x.getPoints())
+        .scan((acc: Array<IPoint>, value: IPoint) => {
+          acc.push(value);
+        }, []);
+    };
+    */
+
+    /*
+    var objs: Observable<IPoint[]> = Observable.of(...this.shapeList).map(x => x.getPoints()).flatMap(x => x);
+    var pointsObj: Observable<IPoint[]> = objs.scan((acc: IPoint[], value: IPoint[]) => {
+        acc.push(...value);
+        return acc;
+    }, []);
+
+    this.pointList.next(pointsObj);
+    */
+
+    /*
+    var allItems: Observable<IPoint[]> = Observable.of(...this.shapeList).map(x => x.getPoints()).flatMap(x => x);
+    var singleObservable: Observable<IPoint[]> = Observable.from(allItems).merge();
+    var wholeObservable = singleObservable.toArray();
+    this.pointList.next(wholeObservable);
+    */
+
+    /*
+    var singleObservable = Observable.from(allItems).toArray();
+    var wholeObservable = singleObservable.toArray();
+    this.pointList.next(wholeObservable);
+    */
+
+    /*
+    var items = Observable.of(this.shapeList.map(x => x.getPoints()));
+    var singleObservable=Observable.from(items).toArray();
+    var wholeObservable = singleObservable.toArray();
+    */
+
+    this.pointList.next(Observable.of(...this.shapeList).map(x => x.getPoints()).flatMap(x => x));
+  }
+
+  /*
+  getPoints(): Observable<IPoint[][]> {
+    return this.pointList.asObservable().flatMap(x => x);
+  }
+  */
+  getPoints(): Observable<IPoint[]> {
+    return this.pointList.asObservable().flatMap(x => x);
+  }
+}
+
+
 
 @Component({
   selector: 'cs-isometric',
   template: `
-    <div cs-resize-tracking style="height:calc(100vh - 68px); width=100vw; position:relative">
-      <canvas #canvas>
+    <div style="height:calc(100vh - 68px); width=100vw; position:relative">
+      <canvas cs-resize-tracking #canvas style="height:100%; width: 100%;">
       </canvas>
     </div>  `,
   styles: []
@@ -32,15 +166,25 @@ export class IsometricComponent implements AfterViewInit {
   private isInitialised: boolean;
 
   private drawList : Array<IDrawOperation>;
+  private shapes: Shape = new Shape(0,0);
 
   constructor(private  windowingService: WindowingService) {
     this.width = 1200;
     this.height = 1200;
 
+
+    this.shapes.getPoints().subscribe( p =>{
+      console.log('items COUNT='+p.length);
+    });
+    this.shapes.addShape(new Rectangle(-64,-64,16,16));
+    this.shapes.addShape(new Rectangle(64,-64,16,16));
+    this.shapes.addShape(new Rectangle(64,64,16,16));
+    this.shapes.addShape(new Rectangle(-64,64,16,16));
+    this.shapes.regenerate();
+
     this.windowingService.getResizeObservable().subscribe((r: ResizeValues) => {
       this.width = r.width;
       this.height = r.height;
-
       if (this.isInitialised) {
         this.drawGrid();
       }

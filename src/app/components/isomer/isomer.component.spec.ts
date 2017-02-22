@@ -5,6 +5,7 @@ import { DebugElement } from '@angular/core';
 
 import { IsomerComponent } from './isomer.component';
 
+/*
 describe('IsomerComponent', () => {
   let component: IsomerComponent;
   let fixture: ComponentFixture<IsomerComponent>;
@@ -26,3 +27,4 @@ describe('IsomerComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+*/
