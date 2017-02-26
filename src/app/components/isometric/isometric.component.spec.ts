@@ -53,7 +53,9 @@ describe('Shape', () =>{
     const pointObservables=shapes.getPoints();
     pointObservables.subscribe( p =>
     {
+      console.log(typeof(p));
       console.log("=========================");
+
       /*
       for(const shape of p)
       {

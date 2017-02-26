@@ -13,7 +13,7 @@ ng update
 
 *Next Angular cli release following steps*
 ```
-yarn global @angular/cli
+yarn global add @angular/cli
 yarn cache clean
 yarn global add @angular/cli@latest 
 rm -rf node_modules dist

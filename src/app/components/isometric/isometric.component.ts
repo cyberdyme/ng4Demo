@@ -1,7 +1,6 @@
 import {Component, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
 import {WindowingService, ResizeValues} from "../../services/windowing-service";
 import {Observable, ReplaySubject} from "rxjs";
-import {Subject} from "rxjs";
 
 enum ActionType
 {
@@ -26,10 +25,13 @@ interface IPoint
 interface IShape
 {
   getPoints(): Observable<IPoint[]>;
+  ObjectId();
 }
 
 export class Rectangle implements IShape
 {
+  private static uniqueNumber: number = 0;
+  private objectId:  number;
   private pointsSubject: ReplaySubject<IPoint[]> = new ReplaySubject<IPoint[]>(1);
 
   private halfWidth: number;
@@ -40,7 +42,15 @@ export class Rectangle implements IShape
   private bottom: number;
 
   constructor(private x: number, private y: number, private width: number, private height: number){
+    this.objectId = Rectangle.uniqueNumber++;
     this.regenerate();
+  }
+
+  ObjectId() : number {
+    get:
+    {
+      return this.objectId;
+    }
   }
 
   updatePosition(x: number, y: number)
@@ -83,18 +93,31 @@ export class Rectangle implements IShape
 
 export class Shape
 {
+  private static uniqueNumber: number = 0;
+  private objectId:  number;
   private shapeList: Array<IShape> = new Array<IShape>();
 
   private pointList: ReplaySubject<Observable<IPoint[]>> = new ReplaySubject<Observable<IPoint[]>>(1);
 
   constructor(private x: number, private y: number){
+    this.objectId = Shape.uniqueNumber++;
+  }
+
+  ObjectId() {
+    get:
+    {
+      return this.objectId;
+    }
   }
 
   addShape(shape: IShape)
   {
+    console.log("Adding shape");
     this.shapeList.push(shape);
     this.regenerate();
   }
+
+
 
   regenerate()
   {
@@ -131,12 +154,36 @@ export class Shape
 
     /*
     var items = Observable.of(this.shapeList.map(x => x.getPoints()));
-    var singleObservable=Observable.from(items).toArray();
+    var singleObservable=Observable.from(items).toArray();g
     var wholeObservable = singleObservable.toArray();
     */
 
-    this.pointList.next(Observable.of(...this.shapeList).map(x => x.getPoints()).flatMap(x => x));
+    //this.pointList.next(Observable.of(...this.shapeList).map(x => x.getPoints()).flatMap(x => x));
+
+    const shapesObs: Observable<IShape> = Observable.from(this.shapeList);
+    shapesObs.subscribe(x => {
+      console.log(" Points=>"+x.ObjectId());
+    })
+
+    const pointsArrayObs: Observable<IPoint[]> = shapesObs.map(x => x.getPoints());
+    pointsArrayObs.mergeMap(x=>x).subscribe((x : IPoint[][]) => {
+      console.log("++++");
+      for(const row of x)
+      {
+        for(const column of row)
+        {
+          console.log("more points x="+column.x+" y="+column.y+" z="+column.z);
+        }
+       }
+    })
+    this.pointList.next(pointsArrayObs);
   }
+
+  allPoints()
+  {
+    const shapesObs: Observable<IShape> = Observable.from(this.shapeList);
+  }
+
 
   /*
   getPoints(): Observable<IPoint[][]> {
@@ -144,7 +191,7 @@ export class Shape
   }
   */
   getPoints(): Observable<IPoint[]> {
-    return this.pointList.asObservable().flatMap(x => x);
+    return this.pointList.asObservable();
   }
 }
 
