@@ -24,15 +24,14 @@ interface IPoint
 
 interface IShape
 {
-  getPoints(): Observable<IPoint[]>;
-  ObjectId();
+  getPoints(): IPoint[];
+  ObjectId(): number;
 }
 
 export class Rectangle implements IShape
 {
   private static uniqueNumber: number = 0;
   private objectId:  number;
-  private pointsSubject: ReplaySubject<IPoint[]> = new ReplaySubject<IPoint[]>(1);
 
   private halfWidth: number;
   private halfHeight: number;
@@ -43,21 +42,18 @@ export class Rectangle implements IShape
 
   constructor(private x: number, private y: number, private width: number, private height: number){
     this.objectId = Rectangle.uniqueNumber++;
-    this.regenerate();
   }
 
-  ObjectId() : number {
-    get:
-    {
-      return this.objectId;
-    }
+  public get ObjectId() : number
+  {
+    return this.objectId;
   }
 
   updatePosition(x: number, y: number)
   {
     if(this.x !==x || this.y !==y)
     {
-      this.regenerate();
+      this.generate();
     }
   }
 
@@ -65,11 +61,11 @@ export class Rectangle implements IShape
   {
     if(this.width !==width || this.height !==height)
     {
-      this.regenerate();
+      this.generate();
     }
   }
 
-  regenerate()
+  generate()
   {
     this.halfWidth = this.width >> 1;
     this.halfHeight = this.height >> 1;
@@ -77,16 +73,14 @@ export class Rectangle implements IShape
     this.right=this.halfWidth + this.x;
     this.top=this.y - this.halfHeight;
     this.bottom=this.halfHeight + this.y;
-
-    this.pointsSubject.next([
-      {x:this.left, y:this.top},
-      {x:this.right, y:this.top},
-      {x:this.right, y:this.bottom},
-      {x:this.left, y: this.bottom}])
   }
 
-  getPoints(): Observable<IPoint[]> {
-    return this.pointsSubject.asObservable();
+  getPoints(): IPoint[] {
+    return [
+      {x: this.left, y: this.top},
+      {x: this.right, y: this.top},
+      {x: this.right, y: this.bottom},
+      {x: this.left, y: this.bottom}];
   }
 }
 
@@ -103,11 +97,9 @@ export class Shape
     this.objectId = Shape.uniqueNumber++;
   }
 
-  ObjectId() {
-    get:
-    {
-      return this.objectId;
-    }
+  public get ObjectId()
+  {
+    return this.objectId;
   }
 
   addShape(shape: IShape)
@@ -121,52 +113,14 @@ export class Shape
 
   regenerate()
   {
-    /*
-    Observable.of(...this.shapeList).map(x => x.getPoints())
-        .scan((acc: Array<IPoint>, value: IPoint) => {
-          acc.push(value);
-        }, []);
-    };
-    */
-
-    /*
-    var objs: Observable<IPoint[]> = Observable.of(...this.shapeList).map(x => x.getPoints()).flatMap(x => x);
-    var pointsObj: Observable<IPoint[]> = objs.scan((acc: IPoint[], value: IPoint[]) => {
-        acc.push(...value);
-        return acc;
-    }, []);
-
-    this.pointList.next(pointsObj);
-    */
-
-    /*
-    var allItems: Observable<IPoint[]> = Observable.of(...this.shapeList).map(x => x.getPoints()).flatMap(x => x);
-    var singleObservable: Observable<IPoint[]> = Observable.from(allItems).merge();
-    var wholeObservable = singleObservable.toArray();
-    this.pointList.next(wholeObservable);
-    */
-
-    /*
-    var singleObservable = Observable.from(allItems).toArray();
-    var wholeObservable = singleObservable.toArray();
-    this.pointList.next(wholeObservable);
-    */
-
-    /*
-    var items = Observable.of(this.shapeList.map(x => x.getPoints()));
-    var singleObservable=Observable.from(items).toArray();g
-    var wholeObservable = singleObservable.toArray();
-    */
-
-    //this.pointList.next(Observable.of(...this.shapeList).map(x => x.getPoints()).flatMap(x => x));
-
     const shapesObs: Observable<IShape> = Observable.from(this.shapeList);
     shapesObs.subscribe(x => {
       console.log(" Points=>"+x.ObjectId());
     })
 
     const pointsArrayObs: Observable<IPoint[]> = shapesObs.map(x => x.getPoints());
-    pointsArrayObs.mergeMap(x=>x).subscribe((x : IPoint[][]) => {
+    /*
+    pointsArrayObs.mergeMap(x=>x).subscribe((x : IPoint[]) => {
       console.log("++++");
       for(const row of x)
       {
@@ -177,6 +131,7 @@ export class Shape
        }
     })
     this.pointList.next(pointsArrayObs);
+    */
   }
 
   allPoints()
@@ -191,7 +146,7 @@ export class Shape
   }
   */
   getPoints(): Observable<IPoint[]> {
-    return this.pointList.asObservable();
+    return this.pointList.asObservable().flatMap( x => x);
   }
 }
 
