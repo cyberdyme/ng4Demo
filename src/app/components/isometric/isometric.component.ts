@@ -159,14 +159,28 @@ export class IsometricComponent implements AfterViewInit {
     this.height = 1200;
 
 
-    this.shapes.getPoints().subscribe( p =>{
-      console.log('items COUNT='+p.length);
+    this.shapes.getPoints().delay(1000).subscribe((p : IPoint[]) =>{
+      this.ctx.fillStyle="#FF000F";
+      this.ctx.beginPath();
+      this.ctx.lineWidth = 1;
+        this.ctx.moveTo(p[0].x, p[0].y);
+        this.ctx.lineTo(p[1].x, p[1].y);
+        this.ctx.lineTo(p[2].x, p[2].y);
+        this.ctx.lineTo(p[3].x, p[3].y);
+        this.ctx.lineTo(p[0].x, p[0].y);
+      this.ctx.stroke();
+      this.ctx.closePath();
     });
     this.shapes.addShape(new Rectangle(-64,-64,16,16));
     this.shapes.addShape(new Rectangle(64,-64,16,16));
     this.shapes.addShape(new Rectangle(64,64,16,16));
     this.shapes.addShape(new Rectangle(-64,64,16,16));
-    this.shapes.regenerate();
+
+    this.shapes.addShape(new Rectangle(128,128,16,16));
+    this.shapes.addShape(new Rectangle(100,128,16,16));
+    this.shapes.addShape(new Rectangle(140,128,16,16));
+
+    this.shapes.generate();
 
     this.windowingService.getResizeObservable().subscribe((r: ResizeValues) => {
       this.width = r.width;
