@@ -15,7 +15,7 @@ export interface IDrawOperation
   y2: number
 }
 
-interface IPoint
+export interface IPoint
 {
   x: number,
   y: number,
@@ -24,8 +24,9 @@ interface IPoint
 
 interface IShape
 {
-  getPoints(): IPoint[];
-  ObjectId(): number;
+  display();
+  getPoints(): Observable<IPoint[]>;
+  ObjectId: number;
 }
 
 export class Rectangle implements IShape
@@ -42,6 +43,7 @@ export class Rectangle implements IShape
 
   constructor(private x: number, private y: number, private width: number, private height: number){
     this.objectId = Rectangle.uniqueNumber++;
+    this.generate();
   }
 
   public get ObjectId() : number
@@ -75,23 +77,37 @@ export class Rectangle implements IShape
     this.bottom=this.halfHeight + this.y;
   }
 
-  getPoints(): IPoint[] {
-    return [
+  display()
+  {
+    this.getPoints().subscribe(points =>
+      {
+        console.log(`(${points[0].x},${points[0].y})----------(${points[1].x},${points[1].y})`);
+        console.log(`|                     |`)
+        console.log(`(${points[3].x},${points[3].y})----------(${points[2].x},${points[2].y})`);
+      });
+  }
+
+  toJSON() {
+    let {left, top, right, bottom} = this;
+    return {left, top, right, bottom};
+  }
+
+  getPoints(): Observable<IPoint[]> {
+    return Observable.of([
       {x: this.left, y: this.top},
       {x: this.right, y: this.top},
       {x: this.right, y: this.bottom},
-      {x: this.left, y: this.bottom}];
+      {x: this.left, y: this.bottom}]
+    );
   }
 }
-
 
 export class Shape
 {
   private static uniqueNumber: number = 0;
   private objectId:  number;
   private shapeList: Array<IShape> = new Array<IShape>();
-
-  private pointList: ReplaySubject<Observable<IPoint[]>> = new ReplaySubject<Observable<IPoint[]>>(1);
+  private pointsSubject: ReplaySubject<Observable<IPoint[]>> = new ReplaySubject<Observable<IPoint[]>>(1);
 
   constructor(private x: number, private y: number){
     this.objectId = Shape.uniqueNumber++;
@@ -106,47 +122,15 @@ export class Shape
   {
     console.log("Adding shape");
     this.shapeList.push(shape);
-    this.regenerate();
   }
 
-
-
-  regenerate()
+  generate()
   {
-    const shapesObs: Observable<IShape> = Observable.from(this.shapeList);
-    shapesObs.subscribe(x => {
-      console.log(" Points=>"+x.ObjectId());
-    })
-
-    const pointsArrayObs: Observable<IPoint[]> = shapesObs.map(x => x.getPoints());
-    /*
-    pointsArrayObs.mergeMap(x=>x).subscribe((x : IPoint[]) => {
-      console.log("++++");
-      for(const row of x)
-      {
-        for(const column of row)
-        {
-          console.log("more points x="+column.x+" y="+column.y+" z="+column.z);
-        }
-       }
-    })
-    this.pointList.next(pointsArrayObs);
-    */
+    this.shapeList.forEach(x=>this.pointsSubject.next(x.getPoints()));
   }
 
-  allPoints()
-  {
-    const shapesObs: Observable<IShape> = Observable.from(this.shapeList);
-  }
-
-
-  /*
-  getPoints(): Observable<IPoint[][]> {
-    return this.pointList.asObservable().flatMap(x => x);
-  }
-  */
   getPoints(): Observable<IPoint[]> {
-    return this.pointList.asObservable().flatMap( x => x);
+    return this.pointsSubject.flatMap(x => x);
   }
 }
 
