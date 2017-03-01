@@ -159,7 +159,7 @@ export class IsometricComponent implements AfterViewInit {
     this.height = 1200;
 
 
-    this.shapes.getPoints().delay(1000).subscribe((p : IPoint[]) =>{
+    this.shapes.getPoints().subscribe((p : IPoint[]) =>{
       this.ctx.fillStyle="#FF000F";
       this.ctx.beginPath();
       this.ctx.lineWidth = 1;
@@ -171,16 +171,6 @@ export class IsometricComponent implements AfterViewInit {
       this.ctx.stroke();
       this.ctx.closePath();
     });
-    this.shapes.addShape(new Rectangle(-64,-64,16,16));
-    this.shapes.addShape(new Rectangle(64,-64,16,16));
-    this.shapes.addShape(new Rectangle(64,64,16,16));
-    this.shapes.addShape(new Rectangle(-64,64,16,16));
-
-    this.shapes.addShape(new Rectangle(128,128,16,16));
-    this.shapes.addShape(new Rectangle(100,128,16,16));
-    this.shapes.addShape(new Rectangle(140,128,16,16));
-
-    this.shapes.generate();
 
     this.windowingService.getResizeObservable().subscribe((r: ResizeValues) => {
       this.width = r.width;
@@ -198,6 +188,25 @@ export class IsometricComponent implements AfterViewInit {
     this.ctx = canvasControl.getContext('2d');
     this.drawGrid();
     this.isInitialised = true;
+
+    this.shapes.addShape(new Rectangle(-64,-64,16,16));
+    this.shapes.addShape(new Rectangle(64,-64,16,16));
+    this.shapes.addShape(new Rectangle(64,64,16,16));
+    this.shapes.addShape(new Rectangle(-64,64,16,16));
+
+    this.shapes.addShape(new Rectangle(128,128,16,16));
+    this.shapes.addShape(new Rectangle(100,128,16,16));
+
+    Observable.range(1,1000).subscribe(
+      p => {
+        const x: number= Math.round(Math.random()*600);
+        const y: number= Math.round(Math.random()*600);
+        this.shapes.addShape(new Rectangle(x,y,16,16));
+      }
+    );
+
+    this.shapes.addShape(new Rectangle(140,128,16,16));
+    this.shapes.generate();
   }
 
   drawGrid() {

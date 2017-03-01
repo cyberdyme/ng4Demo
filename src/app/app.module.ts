@@ -13,7 +13,6 @@ import {CanvasModule} from './components/canvas/canvas.module';
 import { TrackDirective } from './directives/track.directive';
 import {IsomerModule} from './components/isomer/isomer.module';
 import {WindowingServiceModule} from './services/windowing-service.module';
-import {ResizeTrackingDirective} from "./directives/resize-tracking.directive";
 import {IsoMetricModule} from "./components/isometric/isometric.module";
 
 @NgModule({
@@ -27,7 +26,7 @@ import {IsoMetricModule} from "./components/isometric/isometric.module";
     BrowserModule,
     FormsModule,
     HttpModule,
-    MaterialModule.forRoot(),
+    MaterialModule,
     routing,
     CanvasModule,
     IsomerModule,
