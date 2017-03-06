@@ -3,11 +3,13 @@ import {WindowingServiceModule} from "../../services/windowing-service.module";
 import {CommonModule} from "@angular/common";
 import { IsometricComponent } from './isometric.component';
 import {ResizeTrackingDirective} from "../../directives/resize-tracking.directive";
+import {RandomizeServiceModule} from "../../services/randomize.service.module";
 
 @NgModule({
   imports: [
     CommonModule,
-    WindowingServiceModule.forRoot()
+    WindowingServiceModule.forRoot(),
+    RandomizeServiceModule.forRoot(),
   ],
   declarations: [IsometricComponent, ResizeTrackingDirective],
   exports: [IsometricComponent]

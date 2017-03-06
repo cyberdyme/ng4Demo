@@ -1,3 +1,5 @@
+/*jshint bitwise: false*/
+
 import {Component, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
 import {WindowingService, ResizeValues} from "../../services/windowing-service";
 import {Observable, ReplaySubject} from "rxjs";
@@ -197,6 +199,7 @@ export class IsometricComponent implements AfterViewInit {
     this.shapes.addShape(new Rectangle(128,128,16,16));
     this.shapes.addShape(new Rectangle(100,128,16,16));
 
+
     Observable.range(1,1000).subscribe(
       p => {
         const x: number= Math.round(Math.random()*600);
@@ -242,35 +245,23 @@ export class IsometricComponent implements AfterViewInit {
 
     this.drawList=new Array<IDrawOperation>();
 
-    /*
-    let x = 0;
-    while (x < iWidth) {
-      x+=lineOptions.separation;
-      this.drawList.push({x1:x,y1:0,x2:x,y2:iHeight});
-    }
 
-    let y = 0;
-    while (y < iHeight) {
-      y+=lineOptions.separation;
-      this.drawList.push({x1:0,y1:y,x2:iWidth,y2:y});
-    }
-    */
-
-    //this.drawList.push({x1:0,y1:8,x2:halfWidth,y2:iHeight - 8});
-    //this.drawList.push({x1:8,y1:halfHeight,x2:iWidth - 8,y2:halfHeight});
+    this.ctx.translate(halfWidth, halfHeight);
+    this.ctx.scale(1, 0.5);
+    this.ctx.rotate(Math.PI/4);
 
     this.drawList.push({x1:-halfWidth+8,y1:0,x2:halfWidth-8,y2:0});
     this.drawList.push({x1:0,y1:-halfHeight+8,x2:0,y2:halfHeight-8});
 
+
     this.ctx.fillStyle="black";
     this.ctx.fillRect(0,0,iWidth, iHeight);
-
     this.ctx.strokeStyle = lineOptions.color;
     this.ctx.beginPath();
     this.ctx.lineWidth = 1;
     this.drawList.forEach(p => {
-      this.ctx.moveTo(p.x1 + halfWidth, p.y1 + halfHeight);
-      this.ctx.lineTo(p.x2 + halfWidth, p.y2 + halfHeight);
+      this.ctx.moveTo(p.x1, p.y1);
+      this.ctx.lineTo(p.x2, p.y2);
       this.ctx.stroke();
     });
     this.ctx.closePath();
