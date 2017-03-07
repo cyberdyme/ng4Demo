@@ -1,40 +1,35 @@
 /*jshint bitwise: false*/
 
 import {Component, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
-import {WindowingService, ResizeValues} from "../../services/windowing-service";
-import {Observable, ReplaySubject} from "rxjs";
+import {WindowingService, ResizeValues} from '../../services/windowing-service';
+import {Observable, ReplaySubject} from 'rxjs';
 
-enum ActionType
-{
+enum ActionType {
   DrawLine
 }
 
-export interface IDrawOperation
-{
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number
+export interface IDrawOperation {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
 }
 
-export interface IPoint
-{
-  x: number,
-  y: number,
-  z?: number
+export interface IPoint {
+  x: number;
+  y: number;
+  z?: number;
 }
 
-interface IShape
-{
+interface IShape {
   display();
   getPoints(): Observable<IPoint[]>;
   ObjectId: number;
 }
 
-export class Rectangle implements IShape
-{
+export class Rectangle implements IShape {
   private static uniqueNumber: number = 0;
-  private objectId:  number;
+  private objectId: number;
 
   private halfWidth: number;
   private halfHeight: number;
@@ -43,54 +38,46 @@ export class Rectangle implements IShape
   private top: number;
   private bottom: number;
 
-  constructor(private x: number, private y: number, private width: number, private height: number){
+  constructor(private x: number, private y: number, private width: number, private height: number) {
     this.objectId = Rectangle.uniqueNumber++;
     this.generate();
   }
 
-  public get ObjectId() : number
-  {
+  public get ObjectId(): number {
     return this.objectId;
   }
 
-  updatePosition(x: number, y: number)
-  {
-    if(this.x !==x || this.y !==y)
-    {
+  updatePosition(x: number, y: number) {
+    if (this.x !== x || this.y !== y) {
       this.generate();
     }
   }
 
-  updateDimensions(width: number, height: number)
-  {
-    if(this.width !==width || this.height !==height)
-    {
+  updateDimensions(width: number, height: number) {
+    if (this.width !== width || this.height !== height) {
       this.generate();
     }
   }
 
-  generate()
-  {
+  generate() {
     this.halfWidth = this.width >> 1;
     this.halfHeight = this.height >> 1;
     this.left = this.x - this.halfWidth;
-    this.right=this.halfWidth + this.x;
-    this.top=this.y - this.halfHeight;
-    this.bottom=this.halfHeight + this.y;
+    this.right = this.halfWidth + this.x;
+    this.top = this.y - this.halfHeight;
+    this.bottom = this.halfHeight + this.y;
   }
 
-  display()
-  {
-    this.getPoints().subscribe(points =>
-      {
-        console.log(`(${points[0].x},${points[0].y})----------(${points[1].x},${points[1].y})`);
-        console.log(`|                     |`)
-        console.log(`(${points[3].x},${points[3].y})----------(${points[2].x},${points[2].y})`);
-      });
+  display() {
+    this.getPoints().subscribe(points => {
+      console.log(`(${points[0].x},${points[0].y})----------(${points[1].x},${points[1].y})`);
+      console.log(`|                     |`)
+      console.log(`(${points[3].x},${points[3].y})----------(${points[2].x},${points[2].y})`);
+    });
   }
 
   toJSON() {
-    let {left, top, right, bottom} = this;
+    const {left, top, right, bottom} = this;
     return {left, top, right, bottom};
   }
 
@@ -104,38 +91,33 @@ export class Rectangle implements IShape
   }
 }
 
-export class Shape
-{
+export class Shape {
   private static uniqueNumber: number = 0;
-  private objectId:  number;
+  private objectId: number;
   private shapeList: Array<IShape> = new Array<IShape>();
   private pointsSubject: ReplaySubject<Observable<IPoint[]>> = new ReplaySubject<Observable<IPoint[]>>(1);
 
-  constructor(private x: number, private y: number){
+  constructor(private x: number, private y: number) {
     this.objectId = Shape.uniqueNumber++;
   }
 
-  public get ObjectId()
-  {
+  public get ObjectId() {
     return this.objectId;
   }
 
-  addShape(shape: IShape)
-  {
+  addShape(shape: IShape) {
     console.log("Adding shape");
     this.shapeList.push(shape);
   }
 
-  generate()
-  {
-    this.shapeList.forEach(x=>this.pointsSubject.next(x.getPoints()));
+  generate() {
+    this.shapeList.forEach(x => this.pointsSubject.next(x.getPoints()));
   }
 
   getPoints(): Observable<IPoint[]> {
     return this.pointsSubject.flatMap(x => x);
   }
 }
-
 
 
 @Component({
@@ -153,23 +135,24 @@ export class IsometricComponent implements AfterViewInit {
   private height: number;
   private isInitialised: boolean;
 
-  private drawList : Array<IDrawOperation>;
-  private shapes: Shape = new Shape(0,0);
+  private drawList: Array<IDrawOperation>;
+  private shapes: Shape = new Shape(0, 0);
+  @ViewChild('canvas') canvas: ElementRef;
 
   constructor(private  windowingService: WindowingService) {
     this.width = 1200;
     this.height = 1200;
 
 
-    this.shapes.getPoints().subscribe((p : IPoint[]) =>{
-      this.ctx.fillStyle="#FF000F";
+    this.shapes.getPoints().subscribe((p: IPoint[]) => {
+      this.ctx.fillStyle = "#FF000F";
       this.ctx.beginPath();
       this.ctx.lineWidth = 1;
-        this.ctx.moveTo(p[0].x, p[0].y);
-        this.ctx.lineTo(p[1].x, p[1].y);
-        this.ctx.lineTo(p[2].x, p[2].y);
-        this.ctx.lineTo(p[3].x, p[3].y);
-        this.ctx.lineTo(p[0].x, p[0].y);
+      this.ctx.moveTo(p[0].x, p[0].y);
+      this.ctx.lineTo(p[1].x, p[1].y);
+      this.ctx.lineTo(p[2].x, p[2].y);
+      this.ctx.lineTo(p[3].x, p[3].y);
+      this.ctx.lineTo(p[0].x, p[0].y);
       this.ctx.stroke();
       this.ctx.closePath();
     });
@@ -183,32 +166,30 @@ export class IsometricComponent implements AfterViewInit {
     });
   }
 
-  @ViewChild('canvas') canvas: ElementRef;
-
   ngAfterViewInit(): void {
     const canvasControl = this.canvas.nativeElement as HTMLCanvasElement;
     this.ctx = canvasControl.getContext('2d');
     this.drawGrid();
     this.isInitialised = true;
 
-    this.shapes.addShape(new Rectangle(-64,-64,16,16));
-    this.shapes.addShape(new Rectangle(64,-64,16,16));
-    this.shapes.addShape(new Rectangle(64,64,16,16));
-    this.shapes.addShape(new Rectangle(-64,64,16,16));
+    this.shapes.addShape(new Rectangle(-64, -64, 16, 16));
+    this.shapes.addShape(new Rectangle(64, -64, 16, 16));
+    this.shapes.addShape(new Rectangle(64, 64, 16, 16));
+    this.shapes.addShape(new Rectangle(-64, 64, 16, 16));
 
-    this.shapes.addShape(new Rectangle(128,128,16,16));
-    this.shapes.addShape(new Rectangle(100,128,16,16));
+    this.shapes.addShape(new Rectangle(128, 128, 16, 16));
+    this.shapes.addShape(new Rectangle(100, 128, 16, 16));
 
 
-    Observable.range(1,1000).subscribe(
+    Observable.range(1, 1000).subscribe(
       p => {
-        const x: number= Math.round(Math.random()*600);
-        const y: number= Math.round(Math.random()*600);
-        this.shapes.addShape(new Rectangle(x,y,16,16));
+        const x: number = Math.round(Math.random() * 600);
+        const y: number = Math.round(Math.random() * 600);
+        this.shapes.addShape(new Rectangle(x, y, 16, 16));
       }
     );
 
-    this.shapes.addShape(new Rectangle(140,128,16,16));
+    this.shapes.addShape(new Rectangle(140, 128, 16, 16));
     this.shapes.generate();
   }
 
@@ -243,19 +224,19 @@ export class IsometricComponent implements AfterViewInit {
     console.log(`halfHeight = ${halfHeight}`);
 
 
-    this.drawList=new Array<IDrawOperation>();
+    this.drawList = new Array<IDrawOperation>();
 
 
     this.ctx.translate(halfWidth, halfHeight);
     this.ctx.scale(1, 0.5);
-    this.ctx.rotate(Math.PI/4);
+    this.ctx.rotate(Math.PI / 4);
 
-    this.drawList.push({x1:-halfWidth+8,y1:0,x2:halfWidth-8,y2:0});
-    this.drawList.push({x1:0,y1:-halfHeight+8,x2:0,y2:halfHeight-8});
+    this.drawList.push({x1: -halfWidth + 8, y1: 0, x2: halfWidth - 8, y2: 0});
+    this.drawList.push({x1: 0, y1: -halfHeight + 8, x2: 0, y2: halfHeight - 8});
 
 
-    this.ctx.fillStyle="black";
-    this.ctx.fillRect(0,0,iWidth, iHeight);
+    this.ctx.fillStyle = "black";
+    this.ctx.fillRect(0, 0, iWidth, iHeight);
     this.ctx.strokeStyle = lineOptions.color;
     this.ctx.beginPath();
     this.ctx.lineWidth = 1;

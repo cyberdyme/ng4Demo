@@ -1,9 +1,9 @@
-import {NgModule} from "@angular/core";
-import {WindowingServiceModule} from "../../services/windowing-service.module";
-import {CommonModule} from "@angular/common";
+import {NgModule} from '@angular/core';
+import {WindowingServiceModule} from '../../services/windowing-service.module';
+import {CommonModule} from '@angular/common';
 import { IsometricComponent } from './isometric.component';
-import {ResizeTrackingDirective} from "../../directives/resize-tracking.directive";
-import {RandomizeServiceModule} from "../../services/randomize.service.module";
+import {ResizeTrackingDirective} from '../../directives/resize-tracking.directive';
+import {RandomizeServiceModule} from '../../services/randomize.service.module';
 
 @NgModule({
   imports: [
@@ -14,7 +14,5 @@ import {RandomizeServiceModule} from "../../services/randomize.service.module";
   declarations: [IsometricComponent, ResizeTrackingDirective],
   exports: [IsometricComponent]
 })
-export class IsoMetricModule
-{
-
+export class IsoMetricModule {
 }

@@ -38,7 +38,7 @@ export class RandomizeService {
   init_genrand(seed: number) {
     this.mt[0] = seed >>> 0;
     for (this.mti = 1; this.mti < this.N; this.mti++) {
-      const s:number = this.mt[this.mti - 1] ^ (this.mt[this.mti - 1] >>> 30);
+      const s: number = this.mt[this.mti - 1] ^ (this.mt[this.mti - 1] >>> 30);
       this.mt[this.mti] = (((((s & 0xffff0000) >>> 16) * 1812433253) << 16) + (s & 0x0000ffff) * 1812433253)
         + this.mti;
       this.mt[this.mti] >>>= 0;
@@ -51,11 +51,11 @@ export class RandomizeService {
   /* slight change for C++, 2004/2/26 */
   init_by_array(init_key: number, key_length: number) {
     this.init_genrand(19650218);
-    let i: number = 1;
-    let j: number = 0;
+    let i = 1;
+    let j = 0;
     let k: number = (this.N > key_length ? this.N : key_length);
     for (; k; k--) {
-      let s: number = this.mt[i - 1] ^ (this.mt[i - 1] >>> 30);
+      const s: number = this.mt[i - 1] ^ (this.mt[i - 1] >>> 30);
       this.mt[i] = (this.mt[i] ^ (((((s & 0xffff0000) >>> 16) * 1664525) << 16) + ((s & 0x0000ffff) * 1664525)))
         + init_key[j] + j;
       /* non linear */
@@ -89,14 +89,13 @@ export class RandomizeService {
   }
 
   genrand_int32() {
-    var y;
-    var mag01 = new Array(0x0, this.MATRIX_A);
-    /* mag01[x] = x * MATRIX_A  for x=0,1 */
+    let y: number;
+    const mag01 = new Array(0x0, this.MATRIX_A);
 
     if (this.mti >= this.N) {
       let kk: number;
 
-      if (this.mti === this.N + 1){
+      if (this.mti === this.N + 1) {
         this.init_genrand(5489);
       }
 
@@ -143,13 +142,13 @@ export class RandomizeService {
   }
 
   /* generates a random number on (0,1)-real-interval */
-  public genrand_real3 = function () {
+  public genrand_real3() {
     return (this.genrand_int32() + 0.5) * (1.0 / 4294967296.0);
   }
 
   /* generates a random number on [0,1) with 53-bit resolution*/
   public genrand_res53() {
-    var a = this.genrand_int32() >>> 5, b = this.genrand_int32() >>> 6;
+    const a = this.genrand_int32() >>> 5, b = this.genrand_int32() >>> 6;
     return (a * 67108864.0 + b) * (1.0 / 9007199254740992.0);
   }
 }
