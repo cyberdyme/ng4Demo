@@ -181,10 +181,10 @@ export class IsometricComponent implements AfterViewInit {
     this.shapes.addShape(new Rectangle(100, 128, 16, 16));
 
 
-    Observable.range(1, 1000).subscribe(
+    Observable.range(1, 10000).subscribe(
       p => {
-        const x: number = Math.round(Math.random() * 600);
-        const y: number = Math.round(Math.random() * 600);
+        const x: number = Math.round(Math.random() * 900) - 450;
+        const y: number = Math.round(Math.random() * 900) - 450;
         this.shapes.addShape(new Rectangle(x, y, 16, 16));
       }
     );

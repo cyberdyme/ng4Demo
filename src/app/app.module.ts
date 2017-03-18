@@ -11,9 +11,9 @@ import {routing} from './app.route';
 import { AboutComponent } from './components/about.component';
 import {CanvasModule} from './components/canvas/canvas.module';
 import { TrackDirective } from './directives/track.directive';
-import {IsomerModule} from './components/isomer/isomer.module';
 import {WindowingServiceModule} from './services/windowing-service.module';
 import {IsoMetricModule} from "./components/isometric/isometric.module";
+import {RandomizeServiceModule} from "./services/randomize.service.module";
 
 @NgModule({
   declarations: [
@@ -29,9 +29,9 @@ import {IsoMetricModule} from "./components/isometric/isometric.module";
     MaterialModule,
     routing,
     CanvasModule,
-    IsomerModule,
     IsoMetricModule,
-    WindowingServiceModule.forRoot()
+    WindowingServiceModule.forRoot(),
+    RandomizeServiceModule.forRoot()
   ],
   exports: [
     HelloWorldComponent

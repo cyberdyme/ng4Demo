@@ -2,7 +2,6 @@ import {RouterModule, Route} from '@angular/router';
 import {ModuleWithProviders, Injectable} from '@angular/core';
 import {HelloWorldComponent} from './components/hello-world.component';
 import {AboutComponent} from './components/about.component';
-import {IsomerComponent} from "./components/isomer/isomer.component";
 import {IsometricComponent} from "./components/isometric/isometric.component";
 
 export interface ExtendedRoute extends Route {
