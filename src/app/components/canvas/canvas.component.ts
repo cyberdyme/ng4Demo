@@ -1,6 +1,4 @@
-import {Component, OnInit, ElementRef, AfterViewInit} from '@angular/core';
-import {HostListener} from '@angular/core/src/metadata/directives';
-import {ViewChild} from '@angular/core/src/metadata/di';
+import {Component, ElementRef, AfterViewInit, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-canvas',

@@ -1,5 +1,4 @@
-import {Directive, HostListener} from '@angular/core';
-import {Input} from '@angular/core/src/metadata/directives';
+import {Directive, HostListener, Input} from '@angular/core';
 
 @Directive({
   selector: '[track]'

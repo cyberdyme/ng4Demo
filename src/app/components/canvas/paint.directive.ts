@@ -1,6 +1,5 @@
-import {Directive, HostListener, OnInit, EventEmitter, Renderer, ElementRef} from '@angular/core';
+import {Directive, HostListener, OnInit, EventEmitter, Renderer, ElementRef, HostBinding} from '@angular/core';
 import {combineLatest} from 'rxjs/observable/combineLatest';
-import {HostBinding} from '@angular/core/src/metadata/directives';
 
 
 interface IMousePosition {
